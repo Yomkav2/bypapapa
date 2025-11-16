@@ -1,41 +1,377 @@
-# Compiled Lua sources
-luac.out
-
-# luarocks build files
-*.src.rock
-*.zip
-*.tar.gz
-
-# Object files
-*.o
-*.os
-*.ko
-*.obj
-*.elf
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-*.def
-*.exp
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Link Bypasser</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+      
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #e6e6e6;
+        }
+      
+        .container {
+            background-color: #0f3460;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            border: 1px solid #1a5fb4;
+        }
+      
+        h1 {
+            color: #e6e6e6;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+      
+        .description {
+            text-align: center;
+            color: #b0b0b0;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+      
+        .input-group {
+            margin-bottom: 20px;
+        }
+      
+        input {
+            width: 100%;
+            padding: 15px;
+            background-color: #1e1e2e;
+            border: 2px solid #1a5fb4;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #e6e6e6;
+            transition: border-color 0.3s;
+        }
+      
+        input:focus {
+            border-color: #3584e4;
+            outline: none;
+        }
+      
+        input::placeholder {
+            color: #888;
+        }
+      
+        button {
+            background: linear-gradient(135deg, #1a5fb4 0%, #3584e4 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+      
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(53, 132, 228, 0.4);
+        }
+      
+        button:active {
+            transform: translateY(0);
+        }
+      
+        .result {
+            margin-top: 25px;
+            display: none;
+        }
+      
+        .result-box {
+            background-color: #1e1e2e;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            word-break: break-all;
+            border: 1px solid #3584e4;
+        }
+      
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+      
+        .actions button {
+            flex: 1;
+        }
+      
+        .copy-btn {
+            background: #26a269;
+        }
+      
+        .copy-btn:hover {
+            box-shadow: 0 5px 15px rgba(38, 162, 105, 0.4);
+        }
+      
+        .open-btn {
+            background: #1a5fb4;
+        }
+      
+        .open-btn:hover {
+            box-shadow: 0 5px 15px rgba(26, 95, 180, 0.4);
+        }
+      
+        .loading {
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+      
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left-color: #3584e4;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+      
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+      
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #26a269;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+        }
+      
+        .error {
+            color: #ff7b63;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+      
+        .supported {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #b0b0b0;
+            text-align: center;
+        }
+      
+        .success {
+            color: #26a269;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DARK LINK BYPASSER</h1>
+        <p class="description">Enter a Lootlink/Lootlabs or Lootdest URL to bypass and get the original link</p>
+      
+        <div class="input-group">
+            <input type="text" id="urlInput" placeholder="https://loot-link.com/..." autocomplete="off">
+        </div>
+      
+        <button id="bypassBtn">BYPASS</button>
+      
+        <div class="supported">
+            Supported services: Lootlink, Lootlabs, Lootdest
+        </div>
+      
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Processing link...</p>
+        </div>
+      
+        <div class="error" id="error">
+            Error processing the link. Please check your input.
+        </div>
+      
+        <div class="success" id="success">
+            Link successfully bypassed!
+        </div>
+      
+        <div class="result" id="result">
+            <h3>Result:</h3>
+            <div class="result-box" id="resultUrl"></div>
+            <div class="actions">
+                <button class="copy-btn" id="copyBtn">COPY</button>
+                <button class="open-btn" id="openBtn">OPEN</button>
+            </div>
+        </div>
+    </div>
+  
+    <div class="notification" id="notification">Link copied!</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlInput = document.getElementById('urlInput');
+            const bypassBtn = document.getElementById('bypassBtn');
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+            const resultUrl = document.getElementById('resultUrl');
+            const copyBtn = document.getElementById('copyBtn');
+            const openBtn = document.getElementById('openBtn');
+            const notification = document.getElementById('notification');
+            const error = document.getElementById('error');
+            const success = document.getElementById('success');
+          
+            // List of domains to bypass
+            const shortenerDomains = [
+                'loot-link.com',
+                'loot-link.io',
+                'loot-link.me',
+                'lootlabs.gg',
+                'lootdest.com',
+                'lootdest.io'
+            ];
+          
+            bypassBtn.addEventListener('click', async function() {
+                const url = urlInput.value.trim();
+              
+                if (!url) {
+                    showError('Please enter a URL');
+                    return;
+                }
+              
+                // Check if the URL is from supported services
+                let isSupported = false;
+                for (const domain of shortenerDomains) {
+                    if (url.includes(domain)) {
+                        isSupported = true;
+                        break;
+                    }
+                }
+              
+                if (!isSupported) {
+                    showError('This URL is not from supported services (Lootlink/Lootlabs/Lootdest)');
+                    return;
+                }
+              
+                // Show loading indicator
+                loading.style.display = 'block';
+                result.style.display = 'none';
+                error.style.display = 'none';
+                success.style.display = 'none';
+              
+                try {
+                    // Use real API for bypassing links
+                    const bypassedUrl = await realBypass(url);
+                  
+                    // Show result
+                    resultUrl.textContent = bypassedUrl;
+                    result.style.display = 'block';
+                    success.style.display = 'block';
+                  
+                } catch (err) {
+                    showError('Error processing the link: ' + err.message);
+                } finally {
+                    loading.style.display = 'none';
+                }
+            });
+          
+            copyBtn.addEventListener('click', function() {
+                const textToCopy = resultUrl.textContent;
+              
+                // Use modern API for copying
+                navigator.clipboard.writeText(textToCopy).then(function() {
+                    // Show notification
+                    showNotification('Link copied!');
+                }).catch(function(err) {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = textToCopy;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                  
+                    // Show notification
+                    showNotification('Link copied!');
+                });
+            });
+          
+            openBtn.addEventListener('click', function() {
+                const url = resultUrl.textContent;
+                window.open(url, '_blank');
+            });
+          
+            // Function to show error
+            function showError(message) {
+                error.textContent = message;
+                error.style.display = 'block';
+                result.style.display = 'none';
+                loading.style.display = 'none';
+                success.style.display = 'none';
+            }
+          
+            // Function to show notification
+            function showNotification(message) {
+                notification.textContent = message;
+                notification.style.display = 'block';
+                setTimeout(function() {
+                    notification.style.display = 'none';
+                }, 2000);
+            }
+          
+            // Real bypass function using bypass.vip API
+            async function realBypass(url) {
+                const response = await fetch('https://api.bypass.vip/bypass', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
+                });
+                if (!response.ok) throw new Error('API error: ' + response.status);
+                const data = await response.json();
+                if (!data.destination) throw new Error('No destination URL');
+                if (!isValidUrl(data.destination) || isShortenerUrl(data.destination)) {
+                    throw new Error('Invalid or shortener URL');
+                }
+                return data.destination;
+            }
+          
+            // Helper function to validate URLs
+            function isValidUrl(string) {
+                try {
+                    new URL(string);
+                    return true;
+                } catch (_) {
+                    return false;
+                }
+            }
+          
+            // Helper function to check if a URL is from a shortener service
+            function isShortenerUrl(url) {
+                for (const domain of shortenerDomains) {
+                    if (url.includes(domain)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+    </script>
+</body>
+</html>
